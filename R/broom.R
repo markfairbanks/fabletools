@@ -3,8 +3,11 @@ augment.mdl_df <- function(x, ...){
   x <- gather(x, ".model", ".fit", !!!syms(x%@%"models"))
   kv <- key_vars(x)
   x <- transmute(as_tibble(x),
-                 !!!syms(kv), !!sym(".model"), aug = map(!!sym(".fit"), augment))
-  unnest(add_class(x, "lst_ts"), !!sym("aug"), key = kv)
+                 !!!syms(kv), !!sym(".model"),
+                 aug = map(!!sym(".fit"), augment))
+  idx <- index(x[["aug"]][[1L]])
+  kv <- c(kv, key_vars(x[["aug"]][[1L]]))
+  as_tsibble(unnest(x, !!sym("aug")), index = !!idx, key = kv)
 }
 
 #' @export

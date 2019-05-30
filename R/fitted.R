@@ -1,14 +1,17 @@
 #' @importFrom stats fitted
 #' @export
 fitted.mdl_df <- function(object, ...){
-  out <- gather(object, ".model", ".fit", !!!syms(object%@%"models"))
-  kv <- key_vars(out)
-  out <- transmute(as_tibble(out),
+  object <- gather(object, ".model", ".fit", !!!syms(object%@%"models"))
+  kv <- key_vars(object)
+  object <- transmute(as_tibble(object),
     !!!syms(kv),
     !!sym(".model"),
     fitted = map(!!sym(".fit"), fitted, ...)
   )
-  unnest(add_class(out, "lst_ts"), key = kv)
+  
+  idx <- index(object[["fitted"]][[1L]])
+  kv <- c(kv, key_vars(object[["fitted"]][[1L]]))
+  as_tsibble(unnest(object, !!sym("fitted")), index = !!idx, key = kv)
 }
 
 #' @export

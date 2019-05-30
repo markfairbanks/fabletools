@@ -27,13 +27,15 @@ generate.mdl_df <- function(x, new_data = NULL, h = NULL, times = 1, seed = NULL
   if(!is.null(new_data)){
     x <- bind_new_data(x, new_data)
   }
-  x <- gather(x, ".model", ".fit", !!!syms(mdls))
+  x <- as_tibble(gather(x, ".model", ".fit", !!!syms(mdls)))
   
   # Evaluate simulations
-  x$.sim <- map2(x[[".fit"]], 
+  x[[".sim"]] <- map2(x[[".fit"]], 
                       x[["new_data"]] %||% rep(list(NULL), length.out = NROW(x)),
                       generate, h = h, times = times, seed = seed, ...)
-  unnest(add_class(x, "lst_ts"), !!sym(".sim"), key = kv)
+  
+  idx <- index(x[[".sim"]][[1L]])
+  as_tsibble(unnest(x, !!sym(".sim")), index = !!idx, key = kv)
 }
 
 #' @export

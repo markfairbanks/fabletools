@@ -6,8 +6,11 @@ components.mdl_df <- function(object, ...){
                       !!!syms(kv), !!sym(".model"),
                       cmp = map(!!sym(".fit"), components))
   attrs <- combine_dcmp_attr(object[["cmp"]])
-  object <- unnest(add_class(object, "lst_ts"), key = kv)
-  as_dable(object, method = attrs[["method"]], resp = !!attrs[["response"]],
+  idx <- index(object[["cmp"]][[1L]])
+  kv <- c(kv, key_vars(object[["cmp"]][[1L]]))
+  object <- unnest(object)
+  as_dable(object, index = !!idx, key = kv,
+           method = attrs[["method"]], resp = !!attrs[["response"]],
            seasons = attrs[["seasons"]], aliases = attrs[["aliases"]])
 }
 

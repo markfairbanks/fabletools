@@ -1,14 +1,17 @@
 #' @importFrom stats residuals
 #' @export
 residuals.mdl_df <- function(object, ...){
-  out <- gather(object, ".model", ".fit", !!!syms(object%@%"models"))
-  kv <- key_vars(out)
-  out <- transmute(as_tibble(out),
+  object <- gather(object, ".model", ".fit", !!!syms(object%@%"models"))
+  kv <- key_vars(object)
+  object <- transmute(as_tibble(object),
     !!!syms(kv),
     !!sym(".model"),
     residuals = map(!!sym(".fit"), residuals, ...)
   )
-  unnest(add_class(out, "lst_ts"), key = kv)
+  
+  idx <- index(object[["residuals"]][[1L]])
+  kv <- c(kv, key_vars(object[["residuals"]][[1L]]))
+  as_tsibble(unnest(object, !!sym("residuals")), index = !!idx, key = kv)
 }
 
 #' @export
