@@ -35,6 +35,7 @@ generate.mdl_df <- function(x, new_data = NULL, h = NULL, times = 1, seed = NULL
                       generate, h = h, times = times, seed = seed, ...)
   
   idx <- index(x[[".sim"]][[1L]])
+  kv <- c(kv, key_vars(x[[".sim"]][[1L]]))
   as_tsibble(unnest(x, !!sym(".sim")), index = !!idx, key = kv)
 }
 
