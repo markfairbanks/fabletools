@@ -51,8 +51,10 @@ min_trace <- function(models, method = c("wls_var", "ols", "wls_struct", "mint_c
   if(is.null(sparse)){
     sparse <- requireNamespace("SparseM", quietly = TRUE)
   }
-  structure(models, class = c("lst_mint_mdl", "lst_mdl"),
-            method = match.arg(method), sparse = sparse)
+  vctrs::new_vctr(
+    models, method = match.arg(method), sparse = sparse,
+    class = c("lst_mint_mdl", "lst_mdl")
+  )
 }
 
 #' @importFrom utils combn

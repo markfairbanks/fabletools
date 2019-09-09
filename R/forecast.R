@@ -89,7 +89,7 @@ forecast.mdl_df <- function(object, new_data = NULL, h = NULL, bias_adjust = TRU
   
   # Evaluate forecasts
   object <- dplyr::mutate_at(as_tibble(object), vars(!!!mdls),
-                             forecast, object[["new_data"]],
+                             forecast, unclass(object)[["new_data"]],
                              h = h, bias_adjust = bias_adjust, ...,
                              key_data = key_data(object))
   
@@ -165,9 +165,10 @@ These required variables can be provided by specifying `new_data`.",
   
   idx <- index_var(new_data)
   mv <- measured_vars(new_data)
-  cn <- c(names(fc[["point"]]), ".distribution")
+  dist_nm <- ".distribution"
+  cn <- c(names(fc[["point"]]), dist_nm)
   new_data[names(fc[["point"]])] <- fc[["point"]]
-  new_data[[".distribution"]] <- fc[["dist"]]
+  new_data[dist_nm] <- list(fc[["dist"]])
   
   fbl <- build_tsibble_meta(
     as_tibble(new_data)[c(idx, cn, mv)],

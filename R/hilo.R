@@ -33,9 +33,14 @@ new_hilo <- function(lower, upper, level = NULL) {
     }
   }
   
-  list(.lower = transpose_dbl(lower), .upper = transpose_dbl(upper), .level = level) %>% 
-    pmap(tibble) %>%
-    add_class("hilo")
+  vctrs::new_vctr(
+    pmap(
+      list(
+        .lower = transpose_dbl(lower), .upper = transpose_dbl(upper),
+        .level = level),
+      tibble),
+    class = "hilo"
+  )
 }
 
 #' Compute hilo intervals
@@ -74,18 +79,13 @@ is_hilo <- function(x) {
   map_dbl(x, function(.x) .x[[name]])
 }
 
-#' @export
-`[.hilo` <- function(x, ..., drop = TRUE) {
-  add_class(NextMethod(), "hilo")
-}
-
-#' @export
-c.hilo <- function(...) {
-  dots_list(...) %>%
-    map(`[`) %>%
-    unlist(recursive = FALSE, use.names = FALSE) %>%
-    add_class("hilo")
-}
+# #' @export
+# c.hilo <- function(...) {
+#   dots_list(...) %>%
+#     map(`[`) %>%
+#     unlist(recursive = FALSE, use.names = FALSE) %>%
+#     add_class("hilo")
+# }
 
 #' @export
 print.hilo <- function(x, ..., digits = NULL) {
@@ -113,11 +113,6 @@ duplicated.hilo <- function(x, incomparables = FALSE, fromLast = FALSE, ...) {
 #' @export
 unique.hilo <- function(x, incomparables = FALSE, ...) {
   x[!duplicated(x, incomparables = incomparables, ...)]
-}
-
-#' @export
-rep.hilo <- function(x, ...) {
-  add_class(NextMethod(), "hilo")
 }
 
 type_sum.hilo <- function(x) {

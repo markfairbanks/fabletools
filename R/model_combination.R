@@ -218,7 +218,7 @@ Ops.mdl_ts <- function(e1, e2){
 
 #' @export
 Ops.lst_mdl <- function(e1, e2){
-  add_class(map2(e1, e2, .Generic), "lst_mdl")
+  vctrs::new_vctr(map2(e1, e2, .Generic), class = "lst_mdl")
 }
 
 #' @importFrom stats var

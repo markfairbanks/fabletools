@@ -36,7 +36,7 @@ generate.mdl_df <- function(x, new_data = NULL, h = NULL, times = 1, seed = NULL
   
   # Evaluate simulations
   x$.sim <- map2(x[[".sim"]], 
-                 x[["new_data"]] %||% rep(list(NULL), length.out = NROW(x)),
+                 unclass(x)[["new_data"]] %||% rep(list(NULL), length.out = NROW(x)),
                  generate, h = h, times = times, seed = seed, ...)
   unnest_tsbl(x, ".sim", parent_key = kv)
 }
@@ -59,7 +59,7 @@ generate.mdl_ts <- function(x, new_data = NULL, h = NULL, times = 1, seed = NULL
     new_data <- make_future_data(x$data, h)
   }
   
-  if(is.null(new_data[[".rep"]])){
+  if(".rep" %in% names(new_data)){
     new_data <- map(seq_len(times), function(rep){
       new_data[[".rep"]] <- rep
       update_tsibble(new_data, key = c(".rep", key_vars(new_data)),

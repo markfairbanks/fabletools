@@ -6,7 +6,7 @@
 #' @rdname fcdist
 #' @export
 new_fcdist <- function(..., .env){
-  structure(
+  vctrs::new_vctr(
     pmap(dots_list(...), list, .env = .env),
     class = "fcdist"
   )
@@ -45,7 +45,7 @@ update_fcdist <- function(x, quantile = NULL, transformation = NULL, format_fn =
     }
     map(dist, function(x){x[[length(x)]] <- env; x})
   })
-  structure(unsplit(x, .env_ids), class = "fcdist")
+  vctrs::new_vctr(unsplit(x, .env_ids), class = "fcdist")
 }
 
 #' @importFrom stats qnorm
@@ -115,7 +115,7 @@ Ops.fcdist <- function(e1, e2){
       transpose(x)
     })
     
-    return(structure(unsplit(e1, grps), class = "fcdist"))
+    return(vctrs::new_vctr(unsplit(e1, grps), class = "fcdist"))
   }
 
   if(inherits(e1, "fcdist")){
@@ -147,7 +147,7 @@ Ops.fcdist <- function(e1, e2){
     }
     transpose(x)
   })
-  structure(unsplit(dist, .env_ids), class = "fcdist")
+  vctrs::new_vctr(unsplit(dist, .env_ids), class = "fcdist")
 }
 
 type_sum.fcdist <- function(x){
@@ -209,31 +209,6 @@ format.fcdist <- function(x, ...){
       out
     }) %>% 
     unsplit(.env_ids)
-}
-
-#' @export
-`[.fcdist` <- function(x, ...){
-  structure(NextMethod(), class = "fcdist")
-}
-
-#' @export
-c.fcdist <- function(...){
-  structure(NextMethod(), class = "fcdist")
-}
-
-#' @export
-rep.fcdist <- function(x, ...){
-  structure(NextMethod(), class = "fcdist")
-}
-
-#' @export
-unique.fcdist <- function(x, ...){
-  structure(NextMethod(), class = "fcdist")
-}
-
-#' @export
-length.fcdist <- function(x){
-  NextMethod()
 }
 
 #' @rdname hilo

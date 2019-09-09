@@ -10,14 +10,6 @@ format.lst_mdl <- function(x, ...){
 }
 
 #' @export
-c.lst_mdl <- function(x, ...){
-  add_class(NextMethod(), "lst_mdl")
-}
-
-#' @export
-`[.lst_mdl` <- c.lst_mdl
-
-#' @export
 print.lst_mdl <- function(x, ...){
   print(map_chr(x, model_sum), quote = FALSE)
 }

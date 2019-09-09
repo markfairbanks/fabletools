@@ -157,18 +157,18 @@ unnest_tsbl <- function(.data, tsbl_col, parent_key = NULL, interval = NULL){
 }
 
 nest_grps <- function(.data, nm = "data"){
-  out <- dplyr::group_data(.data)
+  out <- unclass(dplyr::group_data(.data))
   grps <- dplyr::group_vars(.data)
-  row_indices <- out[[NCOL(out)]]
-  out[[NCOL(out)]] <- NULL
+  row_indices <- out[[length(out)]]
+  out[[length(out)]] <- NULL
   col_nest <- -match(grps, colnames(.data))
   if(is_empty(col_nest)){
-    col_nest <- rlang::missing_arg()
+    col_nest <- NULL
   }
   out[[nm]] <- map(row_indices, function(x, i, j){
-    out <- x[i,j]
+    out <- if(is.null(j)) x[i,] else x[i,j]
   }, x = .data, j = col_nest)
-  out
+  as_tibble(out)
 }
 
 nest_keys <- function(.data, nm = "data"){
