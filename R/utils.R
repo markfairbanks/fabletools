@@ -67,7 +67,7 @@ bind_new_data <- function(object, new_data){
     object <- left_join(object, new_data, by = key_vars(object))
   }
   else{
-    object[["new_data"]] <- new_data[["new_data"]]
+    object$new_data <- new_data[["new_data"]]
   }
   object
 }
