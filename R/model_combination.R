@@ -88,8 +88,9 @@ combination_ensemble <- function(..., weights = c("equal", "inv_var")){
     out$response <- mdls[[1]]$response
   }
   else{
-    out <- add_class(map(out, `[[<-`, "response", mdls[[1]][[1]]$response), 
-                     "lst_mdl")
+    out <- vctrs::new_vctr(
+      map(out, `[[<-`, "response", mdls[[1]][[1]]$response), 
+      class = "lst_mdl")
   }
   out
 }
