@@ -210,7 +210,7 @@ rbind.fbl_ts <- function(...){
     abort("Cannot combine fables with different distribution names.")
   }
   out <- suppressWarnings(invoke("rbind", map(fbls, as_tsibble)))
-  class(out[[as_string(dist[[1]])]]) <- "fcdist"
+  out[[as_string(dist[[1]])]] <- vctrs::new_vctr(out[[as_string(dist[[1]])]], class = "fcdist")
   as_fable(out, response[[1]], !!dist[[1]])
 }
 
