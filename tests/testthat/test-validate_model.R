@@ -26,7 +26,7 @@ test_that("validate_model", {
   expect_identical(res, value ~ x)
   
   # Test failed response selection
-  tsbl1[["value2"]] <- rnorm(10) 
+  tsbl1$value2 <- rnorm(10) 
   expect_error(validate_formula(no_specials(), data = tsbl1), "Could not automatically determine the response variable")
   
   # Test failed LHS response variable selection
