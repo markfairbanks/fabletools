@@ -265,9 +265,10 @@ forecast.model_combination <- function(object, new_data, specials, ...){
   # var(x) + var(y) + 2*cov(x,y)
   .dist <- eval_tidy(expr, map(object, get_attr_col, "dist"))
   if(is_dist_normal(.dist)){
-    .dist <- add_class(
+    .dist <- vctrs::new_vctr(
       map2(.dist, fc_cov, function(x, cov) {x$sd <- sqrt(x$sd^2 + 2*cov); x}),
-      "fcdist")
+      class = "fcdist"
+    )
   }
   
   .fc <- eval_tidy(expr, map(object, function(x) 
