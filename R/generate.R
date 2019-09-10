@@ -59,9 +59,9 @@ generate.mdl_ts <- function(x, new_data = NULL, h = NULL, times = 1, seed = NULL
     new_data <- make_future_data(x$data, h)
   }
   
-  if(".rep" %in% names(new_data)){
+  if(!(".rep" %in% names(new_data))){
     new_data <- map(seq_len(times), function(rep){
-      new_data[[".rep"]] <- rep
+      new_data$.rep <- rep
       update_tsibble(new_data, key = c(".rep", key_vars(new_data)),
                      validate = FALSE)
     }) %>% 
