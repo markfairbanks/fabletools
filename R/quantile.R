@@ -236,10 +236,11 @@ hilo.fcdist <- function(x, level = 95, ...){
     abort("'level' can't be negative or greater than 100.")
   }
   .env_ids <- map_chr(x, function(x) env_label(x[[".env"]]))
-  split(x, .env_ids) %>% 
+  out <- rep(new_hilo(), length(x))
+  split(out, .env_ids) <- split(x, .env_ids) %>% 
     set_names(NULL) %>% 
-    map(hilo_fcdist, level = level, ...) %>% 
-    unsplit(.env_ids)
+    map(hilo_fcdist, level = level, ...)
+  out
 }
 
 hilo_fcdist <- function(level, x, ...){

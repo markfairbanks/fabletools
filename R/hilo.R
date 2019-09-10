@@ -12,10 +12,7 @@
 #' new_hilo(lower = rnorm(10), upper = rnorm(10) + 5, level = 95L)
 #'
 #' @export
-new_hilo <- function(lower, upper, level = NULL) {
-  if (missing(lower) || missing(upper)) {
-    abort("no default for `lower` or `upper`.")
-  }
+new_hilo <- function(lower = NA_real_, upper = NA_real_, level = NA_real_) {
   if(!is.list(lower) && !is.list(upper)){
     lower <- list(lower)
     upper <- list(upper)
