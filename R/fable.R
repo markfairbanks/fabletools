@@ -155,11 +155,9 @@ tbl_sum.fbl_ts <- function(x){
 #' @rdname hilo
 #' @export
 hilo.fbl_ts <- function(x, level = c(80, 95), ...){
-  x %>%
-    transmute(
-      !!!(x%@%"response"),
-      !!!set_names(map(level,function(.x) expr(hilo(!!(x%@%"dist"), !!.x))),
-                   paste0(level, "%")))
+  dist <- as_string(x%@%"dist")
+  x[paste0(level, "%")] <- map(level, hilo, x = x[[dist]])
+  as_tsibble(x)[,-match(dist, colnames(x))]
 }
 
 #' @export
