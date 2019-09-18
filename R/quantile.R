@@ -257,28 +257,33 @@ length.fcdist <- function(x){
 #' @export
 hilo.fcdist <- function(x, level = 95, ...){
   if(length(level)!=1){
-    abort("Only one value of 'level' is supported.")
+    abort("Only one confidence `level` can be computed in each function call.")
   }
   if (level < 0 || level > 100) {
-    abort("'level' can't be negative or greater than 100.")
+    abort("The confidence `level` must be between 0 and 100.")
   }
   .env_ids <- map_chr(x, function(x) env_label(x[[".env"]]))
-  split(x, .env_ids) %>% 
+  out <- rep(new_hilo(0,0,0), length(x))
+  split(out, .env_ids) <- split(x, .env_ids) %>% 
     set_names(NULL) %>% 
-    map(hilo_fcdist, level = level, ...) %>% 
-    unsplit(.env_ids)
+    map(hilo_fcdist, level = level, ...)
+  out
 }
 
 hilo_fcdist <- function(level, x, ...){
   env <- x[[1]][[length(x[[1]])]]
   args <- transpose(x)[-length(x[[1]])]
+  
+  if(length(env$t) > 1)
+    abort("Multivariate intervals are not yet supported")
+  
+  qt <- env$f
+  trans <- env$t[[1]]
+  
   list(lower = 50-level/2, upper = 50+level/2) %>%
     map(function(level){
-      intr <- do.call(env$f, c(list(level/100), as.list(args), dots_list(...)))
-      if(!is.list(intr)){
-        intr <- list(intr)
-      }
-      map2(env$t, intr, calc)
+      intr <- do.call(qt, c(list(level/100), as.list(args), dots_list(...)))
+      trans(intr)
     }) %>%
     append(list(level = level)) %>%
     invoke("new_hilo", .)
