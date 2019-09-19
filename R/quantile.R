@@ -363,7 +363,7 @@ dist_sim <- function(sample, ...){
   new_fcdist(map(sample, list), ..., .env = env_dist_sim)
 }
 
-env_dist_unknown <- new_fcdist_env(function(x, ...) rep(NA, length(x)),
+env_dist_unknown <- new_fcdist_env(function(x, ...) rep(NA_real_, length(x)),
                                    display = function(x, ...) rep("?", length(x)))
 
 #' @rdname distributions
