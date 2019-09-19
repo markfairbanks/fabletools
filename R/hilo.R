@@ -83,3 +83,26 @@ is.na.hilo <- function(x) {
   x <- vec_data(x)
   is.na(x$lower) & is.na(x$upper)
 }
+
+#' @export
+vec_math.hilo <- function(.fn, .x, ...){
+  out <- vec_data(.x)
+  out[["lower"]] <- get(.fn)(out[["lower"]], ...)
+  out[["upper"]] <- get(.fn)(out[["upper"]], ...)
+  vec_restore(out, .x)
+}
+
+#' @export
+vec_arith.hilo <- function(op, x, y, ...){
+  out <- dt_x <- vec_data(x)
+  if(is_hilo(y)){
+    dt_y <- vec_data(y)
+    out[["lower"]] <- get(op)(dt_x[["lower"]], dt_y[["lower"]])
+    out[["upper"]] <- get(op)(dt_x[["upper"]], dt_y[["upper"]])
+  }
+  else{
+    out[["lower"]] <- get(op)(dt_x[["lower"]], y)
+    out[["upper"]] <- get(op)(dt_x[["upper"]], y)
+  }
+  vec_restore(out, x)
+}
