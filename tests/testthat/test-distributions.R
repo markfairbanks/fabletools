@@ -43,7 +43,7 @@ test_that("Normal distribution", {
   td <- fabletools:::update_fcdist(d, transformation = list(function(x) exp(x)))
   
   expect_equal(
-    hilo(d)[[1]] %>% mutate(.lower = exp(.lower), .upper = exp(.upper)),
+    exp(hilo(d)[[1]]),
     hilo(td)[[1]]
   )
   
