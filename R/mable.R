@@ -45,6 +45,7 @@ as_mable <- function(x, ...){
 #' @export
 as_mable.tbl_df <- function(x, key = NULL, models = NULL, ...){
   models <- tidyselect::vars_select(names(x), !!enquo(models))
+  key <- tidyselect::vars_select(names(x), !!enquo(key))
   
   if(length(unique(map(x[models], function(mdl) mdl[[1]]$response))) > 1){
     abort("A mable can only contain models with the same response variable(s).")
